@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiCompatibilityMapper">
+
+    <resultMap type="MbtiCompatibility" id="MbtiCompatibilityResult">
+        <result property="compatibilityId"    column="compatibility_id"    />
+        <result property="typeCode1"    column="type_code_1"    />
+        <result property="typeCode2"    column="type_code_2"    />
+        <result property="compatibilityScore"    column="compatibility_score"    />
+        <result property="relationshipAnalysis"    column="relationship_analysis"    />
+        <result property="advantages"    column="advantages"    />
+        <result property="challenges"    column="challenges"    />
+        <result property="recommendations"    column="recommendations"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiCompatibilityVo">
+        select compatibility_id, type_code_1, type_code_2, compatibility_score, relationship_analysis, advantages, challenges, recommendations, create_by, create_time, update_by, update_time, remark from mbti_compatibility
+    </sql>
+
+    <select id="selectMbtiCompatibilityList" parameterType="MbtiCompatibility" resultMap="MbtiCompatibilityResult">
+        <include refid="selectMbtiCompatibilityVo"/>
+        <where>
+            <if test="typeCode1 != null  and typeCode1 != ''"> and type_code_1 = #{typeCode1}</if>
+            <if test="typeCode2 != null  and typeCode2 != ''"> and type_code_2 = #{typeCode2}</if>
+            <if test="compatibilityScore != null "> and compatibility_score = #{compatibilityScore}</if>
+            <if test="relationshipAnalysis != null  and relationshipAnalysis != ''"> and relationship_analysis = #{relationshipAnalysis}</if>
+            <if test="advantages != null  and advantages != ''"> and advantages = #{advantages}</if>
+            <if test="challenges != null  and challenges != ''"> and challenges = #{challenges}</if>
+            <if test="recommendations != null  and recommendations != ''"> and recommendations = #{recommendations}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiCompatibilityByCompatibilityId" parameterType="Long" resultMap="MbtiCompatibilityResult">
+        <include refid="selectMbtiCompatibilityVo"/>
+        where compatibility_id = #{compatibilityId}
+    </select>
+
+    <insert id="insertMbtiCompatibility" parameterType="MbtiCompatibility" useGeneratedKeys="true" keyProperty="compatibilityId">
+        insert into mbti_compatibility
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeCode1 != null and typeCode1 != ''">type_code_1,</if>
+            <if test="typeCode2 != null and typeCode2 != ''">type_code_2,</if>
+            <if test="compatibilityScore != null">compatibility_score,</if>
+            <if test="relationshipAnalysis != null">relationship_analysis,</if>
+            <if test="advantages != null">advantages,</if>
+            <if test="challenges != null">challenges,</if>
+            <if test="recommendations != null">recommendations,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeCode1 != null and typeCode1 != ''">#{typeCode1},</if>
+            <if test="typeCode2 != null and typeCode2 != ''">#{typeCode2},</if>
+            <if test="compatibilityScore != null">#{compatibilityScore},</if>
+            <if test="relationshipAnalysis != null">#{relationshipAnalysis},</if>
+            <if test="advantages != null">#{advantages},</if>
+            <if test="challenges != null">#{challenges},</if>
+            <if test="recommendations != null">#{recommendations},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiCompatibility" parameterType="MbtiCompatibility">
+        update mbti_compatibility
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeCode1 != null and typeCode1 != ''">type_code_1 = #{typeCode1},</if>
+            <if test="typeCode2 != null and typeCode2 != ''">type_code_2 = #{typeCode2},</if>
+            <if test="compatibilityScore != null">compatibility_score = #{compatibilityScore},</if>
+            <if test="relationshipAnalysis != null">relationship_analysis = #{relationshipAnalysis},</if>
+            <if test="advantages != null">advantages = #{advantages},</if>
+            <if test="challenges != null">challenges = #{challenges},</if>
+            <if test="recommendations != null">recommendations = #{recommendations},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where compatibility_id = #{compatibilityId}
+    </update>
+
+    <delete id="deleteMbtiCompatibilityByCompatibilityId" parameterType="Long">
+        delete from mbti_compatibility where compatibility_id = #{compatibilityId}
+    </delete>
+
+    <delete id="deleteMbtiCompatibilityByCompatibilityIds" parameterType="String">
+        delete from mbti_compatibility where compatibility_id in
+        <foreach item="compatibilityId" collection="array" open="(" separator="," close=")">
+            #{compatibilityId}
+        </foreach>
+    </delete>
+</mapper>

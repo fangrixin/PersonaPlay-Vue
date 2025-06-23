@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiUserRelationshipMapper">
+
+    <resultMap type="MbtiUserRelationship" id="MbtiUserRelationshipResult">
+        <result property="relationshipId"    column="relationship_id"    />
+        <result property="userIdA"    column="user_id_a"    />
+        <result property="userIdB"    column="user_id_b"    />
+        <result property="latestTestRecordId"    column="latest_test_record_id"    />
+        <result property="testCount"    column="test_count"    />
+        <result property="compatibilityScore"    column="compatibility_score"    />
+        <result property="chemistryScore"    column="chemistry_score"    />
+        <result property="lastTestTime"    column="last_test_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiUserRelationshipVo">
+        select relationship_id, user_id_a, user_id_b, latest_test_record_id, test_count, compatibility_score, chemistry_score, last_test_time, create_by, create_time, update_by, update_time, remark from mbti_user_relationship
+    </sql>
+
+    <select id="selectMbtiUserRelationshipList" parameterType="MbtiUserRelationship" resultMap="MbtiUserRelationshipResult">
+        <include refid="selectMbtiUserRelationshipVo"/>
+        <where>
+            <if test="userIdA != null "> and user_id_a = #{userIdA}</if>
+            <if test="userIdB != null "> and user_id_b = #{userIdB}</if>
+            <if test="latestTestRecordId != null "> and latest_test_record_id = #{latestTestRecordId}</if>
+            <if test="testCount != null "> and test_count = #{testCount}</if>
+            <if test="compatibilityScore != null "> and compatibility_score = #{compatibilityScore}</if>
+            <if test="chemistryScore != null "> and chemistry_score = #{chemistryScore}</if>
+            <if test="lastTestTime != null "> and last_test_time = #{lastTestTime}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiUserRelationshipByRelationshipId" parameterType="Long" resultMap="MbtiUserRelationshipResult">
+        <include refid="selectMbtiUserRelationshipVo"/>
+        where relationship_id = #{relationshipId}
+    </select>
+
+    <insert id="insertMbtiUserRelationship" parameterType="MbtiUserRelationship" useGeneratedKeys="true" keyProperty="relationshipId">
+        insert into mbti_user_relationship
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userIdA != null">user_id_a,</if>
+            <if test="userIdB != null">user_id_b,</if>
+            <if test="latestTestRecordId != null">latest_test_record_id,</if>
+            <if test="testCount != null">test_count,</if>
+            <if test="compatibilityScore != null">compatibility_score,</if>
+            <if test="chemistryScore != null">chemistry_score,</if>
+            <if test="lastTestTime != null">last_test_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userIdA != null">#{userIdA},</if>
+            <if test="userIdB != null">#{userIdB},</if>
+            <if test="latestTestRecordId != null">#{latestTestRecordId},</if>
+            <if test="testCount != null">#{testCount},</if>
+            <if test="compatibilityScore != null">#{compatibilityScore},</if>
+            <if test="chemistryScore != null">#{chemistryScore},</if>
+            <if test="lastTestTime != null">#{lastTestTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiUserRelationship" parameterType="MbtiUserRelationship">
+        update mbti_user_relationship
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userIdA != null">user_id_a = #{userIdA},</if>
+            <if test="userIdB != null">user_id_b = #{userIdB},</if>
+            <if test="latestTestRecordId != null">latest_test_record_id = #{latestTestRecordId},</if>
+            <if test="testCount != null">test_count = #{testCount},</if>
+            <if test="compatibilityScore != null">compatibility_score = #{compatibilityScore},</if>
+            <if test="chemistryScore != null">chemistry_score = #{chemistryScore},</if>
+            <if test="lastTestTime != null">last_test_time = #{lastTestTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where relationship_id = #{relationshipId}
+    </update>
+
+    <delete id="deleteMbtiUserRelationshipByRelationshipId" parameterType="Long">
+        delete from mbti_user_relationship where relationship_id = #{relationshipId}
+    </delete>
+
+    <delete id="deleteMbtiUserRelationshipByRelationshipIds" parameterType="String">
+        delete from mbti_user_relationship where relationship_id in
+        <foreach item="relationshipId" collection="array" open="(" separator="," close=")">
+            #{relationshipId}
+        </foreach>
+    </delete>
+</mapper>

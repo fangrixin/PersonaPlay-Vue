@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiTestAnswerMapper">
+
+    <resultMap type="MbtiTestAnswer" id="MbtiTestAnswerResult">
+        <result property="answerId"    column="answer_id"    />
+        <result property="recordId"    column="record_id"    />
+        <result property="questionId"    column="question_id"    />
+        <result property="userAnswer"    column="user_answer"    />
+        <result property="dimensionValue"    column="dimension_value"    />
+        <result property="answerTime"    column="answer_time"    />
+        <result property="timeSpent"    column="time_spent"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiTestAnswerVo">
+        select answer_id, record_id, question_id, user_answer, dimension_value, answer_time, time_spent, sequence, create_by, create_time, update_by, update_time, remark from mbti_test_answer
+    </sql>
+
+    <select id="selectMbtiTestAnswerList" parameterType="MbtiTestAnswer" resultMap="MbtiTestAnswerResult">
+        <include refid="selectMbtiTestAnswerVo"/>
+        <where>
+            <if test="recordId != null "> and record_id = #{recordId}</if>
+            <if test="questionId != null "> and question_id = #{questionId}</if>
+            <if test="userAnswer != null  and userAnswer != ''"> and user_answer = #{userAnswer}</if>
+            <if test="dimensionValue != null  and dimensionValue != ''"> and dimension_value = #{dimensionValue}</if>
+            <if test="answerTime != null "> and answer_time = #{answerTime}</if>
+            <if test="timeSpent != null "> and time_spent = #{timeSpent}</if>
+            <if test="sequence != null "> and sequence = #{sequence}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiTestAnswerByAnswerId" parameterType="Long" resultMap="MbtiTestAnswerResult">
+        <include refid="selectMbtiTestAnswerVo"/>
+        where answer_id = #{answerId}
+    </select>
+
+    <insert id="insertMbtiTestAnswer" parameterType="MbtiTestAnswer" useGeneratedKeys="true" keyProperty="answerId">
+        insert into mbti_test_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
+            <if test="questionId != null">question_id,</if>
+            <if test="userAnswer != null and userAnswer != ''">user_answer,</if>
+            <if test="dimensionValue != null and dimensionValue != ''">dimension_value,</if>
+            <if test="answerTime != null">answer_time,</if>
+            <if test="timeSpent != null">time_spent,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="questionId != null">#{questionId},</if>
+            <if test="userAnswer != null and userAnswer != ''">#{userAnswer},</if>
+            <if test="dimensionValue != null and dimensionValue != ''">#{dimensionValue},</if>
+            <if test="answerTime != null">#{answerTime},</if>
+            <if test="timeSpent != null">#{timeSpent},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiTestAnswer" parameterType="MbtiTestAnswer">
+        update mbti_test_answer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordId != null">record_id = #{recordId},</if>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="userAnswer != null and userAnswer != ''">user_answer = #{userAnswer},</if>
+            <if test="dimensionValue != null and dimensionValue != ''">dimension_value = #{dimensionValue},</if>
+            <if test="answerTime != null">answer_time = #{answerTime},</if>
+            <if test="timeSpent != null">time_spent = #{timeSpent},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where answer_id = #{answerId}
+    </update>
+
+    <delete id="deleteMbtiTestAnswerByAnswerId" parameterType="Long">
+        delete from mbti_test_answer where answer_id = #{answerId}
+    </delete>
+
+    <delete id="deleteMbtiTestAnswerByAnswerIds" parameterType="String">
+        delete from mbti_test_answer where answer_id in
+        <foreach item="answerId" collection="array" open="(" separator="," close=")">
+            #{answerId}
+        </foreach>
+    </delete>
+</mapper>

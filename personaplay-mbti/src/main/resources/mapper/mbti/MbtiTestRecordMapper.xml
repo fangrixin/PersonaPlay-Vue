@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiTestRecordMapper">
+
+    <resultMap type="MbtiTestRecord" id="MbtiTestRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="testType"    column="test_type"    />
+        <result property="versionId"    column="version_id"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="duration"    column="duration"    />
+        <result property="mbtiResult"    column="mbti_result"    />
+        <result property="eIScore"    column="e_i_score"    />
+        <result property="sNScore"    column="s_n_score"    />
+        <result property="tFScore"    column="t_f_score"    />
+        <result property="jPScore"    column="j_p_score"    />
+        <result property="compatibilityScore"    column="compatibility_score"    />
+        <result property="chemistryScore"    column="chemistry_score"    />
+        <result property="identicalAnswers"    column="identical_answers"    />
+        <result property="totalQuestions"    column="total_questions"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="partnerId"    column="partner_id"    />
+        <result property="partnerName"    column="partner_name"    />
+        <result property="partnerMbtiResult"    column="partner_mbti_result"    />
+        <result property="relationshipAnalysis"    column="relationship_analysis"    />
+        <result property="advantages"    column="advantages"    />
+        <result property="challenges"    column="challenges"    />
+        <result property="recommendations"    column="recommendations"    />
+    </resultMap>
+
+    <sql id="selectMbtiTestRecordVo">
+        select record_id, user_id, test_type, version_id, room_id, start_time, end_time, duration, mbti_result, e_i_score, s_n_score, t_f_score, j_p_score, compatibility_score, chemistry_score, identical_answers, total_questions, status, create_by, create_time, update_by, update_time, remark,partner_id,partner_name,partner_mbti_result,relationship_analysis, advantages, challenges, recommendations from mbti_test_record
+    </sql>
+
+    <select id="selectMbtiTestRecordList" parameterType="MbtiTestRecord" resultMap="MbtiTestRecordResult">
+        <include refid="selectMbtiTestRecordVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="testType != null  and testType != ''"> and test_type = #{testType}</if>
+            <if test="versionId != null "> and version_id = #{versionId}</if>
+            <if test="roomId != null "> and room_id = #{roomId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="mbtiResult != null  and mbtiResult != ''"> and mbti_result = #{mbtiResult}</if>
+            <if test="eIScore != null "> and e_i_score = #{eIScore}</if>
+            <if test="sNScore != null "> and s_n_score = #{sNScore}</if>
+            <if test="tFScore != null "> and t_f_score = #{tFScore}</if>
+            <if test="jPScore != null "> and j_p_score = #{jPScore}</if>
+            <if test="compatibilityScore != null "> and compatibility_score = #{compatibilityScore}</if>
+            <if test="chemistryScore != null "> and chemistry_score = #{chemistryScore}</if>
+            <if test="identicalAnswers != null "> and identical_answers = #{identicalAnswers}</if>
+            <if test="totalQuestions != null "> and total_questions = #{totalQuestions}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+             <if test="partnerId != null "> and partner_id = #{partnerId}</if>
+            <if test="partnerName != null "> and partner_name = #{partnerName}</if>
+             <if test="partnerMbtiResult != null "> and partner_mbti_result = #{partnerMbtiResult}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiTestRecordVoList" parameterType="MbtiTestRecord" resultType="com.personaplay.mbti.domain.vo.MbtiTestRecordVo">
+        select mtr.record_id recordId, mtr.user_id userId, mtr.test_type testType, mtr.version_id versionId, mtr.room_id roomId, mtr.start_time startTime, mtr.end_time endTime, mtr.duration, mtr.mbti_result mbtiResult, mtr.compatibility_score compatibilityScore, mtr.chemistry_score chemistryScore, mtr.identical_answers identicalAnswers, mtr.total_questions totalQuestions, mtr.status,mtr.create_time createTime,mtr.remark,mtr.partner_id partnerId,mtr.partner_name partnerName,mtr.partner_mbti_result partnerMbtiResult,mv.version_name versionName,
+               mtr.relationship_analysis relationshipAnalysis, mtr.advantages advantages, mtr.challenges challenges, mtr.recommendations recommendations
+        from mbti_test_record mtr left join mbti_test_version mv on mtr.version_id = mv.version_id
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="testType != null  and testType != ''"> and test_type = #{testType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="partnerId != null "> and partner_id = #{partnerId}</if>
+            <if test="partnerName != null "> and partner_name = #{partnerName}</if>
+        </where>
+        order by mtr.create_time desc
+    </select>
+
+    <select id="selectMbtiTestRecordByRecordId" parameterType="Long" resultMap="MbtiTestRecordResult">
+        <include refid="selectMbtiTestRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertMbtiTestRecord" parameterType="MbtiTestRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into mbti_test_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="testType != null and testType != ''">test_type,</if>
+            <if test="versionId != null">version_id,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="duration != null">duration,</if>
+            <if test="mbtiResult != null">mbti_result,</if>
+            <if test="eIScore != null">e_i_score,</if>
+            <if test="sNScore != null">s_n_score,</if>
+            <if test="tFScore != null">t_f_score,</if>
+            <if test="jPScore != null">j_p_score,</if>
+            <if test="compatibilityScore != null">compatibility_score,</if>
+            <if test="chemistryScore != null">chemistry_score,</if>
+            <if test="identicalAnswers != null">identical_answers,</if>
+            <if test="totalQuestions != null">total_questions,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="partnerId != null">partner_id,</if>
+            <if test="partnerName != null">partner_name,</if>
+            <if test="partnerMbtiResult != null">partner_mbti_result,</if>
+            <if test="relationshipAnalysis != null">relationship_analysis,</if>
+            <if test="advantages != null">advantages,</if>
+            <if test="challenges != null">challenges,</if>
+            <if test="recommendations != null">recommendations,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="testType != null and testType != ''">#{testType},</if>
+            <if test="versionId != null">#{versionId},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="mbtiResult != null">#{mbtiResult},</if>
+            <if test="eIScore != null">#{eIScore},</if>
+            <if test="sNScore != null">#{sNScore},</if>
+            <if test="tFScore != null">#{tFScore},</if>
+            <if test="jPScore != null">#{jPScore},</if>
+            <if test="compatibilityScore != null">#{compatibilityScore},</if>
+            <if test="chemistryScore != null">#{chemistryScore},</if>
+            <if test="identicalAnswers != null">#{identicalAnswers},</if>
+            <if test="totalQuestions != null">#{totalQuestions},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="partnerId != null">#{partnerId},</if>
+            <if test="partnerName != null">#{partnerName},</if>
+            <if test="partnerMbtiResult != null">#{partnerMbtiResult},</if>
+            <if test="relationshipAnalysis != null">#{relationshipAnalysis},</if>
+            <if test="advantages != null">#{advantages},</if>
+            <if test="challenges != null">#{challenges},</if>
+            <if test="recommendations != null">#{recommendations},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiTestRecord" parameterType="MbtiTestRecord">
+        update mbti_test_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="testType != null and testType != ''">test_type = #{testType},</if>
+            <if test="versionId != null">version_id = #{versionId},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="mbtiResult != null">mbti_result = #{mbtiResult},</if>
+            <if test="eIScore != null">e_i_score = #{eIScore},</if>
+            <if test="sNScore != null">s_n_score = #{sNScore},</if>
+            <if test="tFScore != null">t_f_score = #{tFScore},</if>
+            <if test="jPScore != null">j_p_score = #{jPScore},</if>
+            <if test="compatibilityScore != null">compatibility_score = #{compatibilityScore},</if>
+            <if test="chemistryScore != null">chemistry_score = #{chemistryScore},</if>
+            <if test="identicalAnswers != null">identical_answers = #{identicalAnswers},</if>
+            <if test="totalQuestions != null">total_questions = #{totalQuestions},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="partnerId != null">partner_id = #{partnerId},</if>
+            <if test="partnerName != null">partner_name = #{partnerName},</if>
+            <if test="partnerMbtiResult != null">partner_mbti_result = #{partnerMbtiResult},</if>
+            <if test="relationshipAnalysis != null">relationship_analysis = #{relationshipAnalysis},</if>
+            <if test="advantages != null">advantages = #{advantages},</if>
+            <if test="challenges != null">challenges = #{challenges},</if>
+            <if test="recommendations != null">recommendations = #{recommendations},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteMbtiTestRecordByRecordId" parameterType="Long">
+        delete from mbti_test_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteMbtiTestRecordByRecordIds" parameterType="String">
+        delete from mbti_test_record where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+    <select id="getCompatibilityRanks" resultType="Map">
+        WITH ranked_records AS (
+            SELECT
+            r1.partner_id,
+            r1.partner_name,
+            r1.compatibility_score,
+            r2.mbti_result,
+            ROW_NUMBER() OVER (
+            PARTITION BY r1.partner_id
+            ORDER BY r1.compatibility_score DESC
+            ) as rn
+            FROM
+            mbti_test_record r1
+            LEFT JOIN mbti_test_record r2
+            ON r1.room_id = r2.room_id
+            AND r1.partner_id = r2.user_id
+            AND r2.test_type = '2'  -- 确保获取相同测试类型的MBTI结果
+            WHERE
+            r1.user_id = #{userId}
+            AND r1.test_type = '2'
+            AND r1.partner_id IS NOT NULL
+            AND r1.compatibility_score IS NOT NULL
+            )
+        SELECT
+            partner_id,
+            partner_name AS partnerName,
+            compatibility_score AS compatibilityScore,
+            mbti_result AS partnerMbtiType
+        FROM
+            ranked_records
+        WHERE
+            rn = 1  -- 每个partner只取最高分记录
+        ORDER BY
+            compatibilityScore DESC
+            LIMIT 10;
+    </select>
+
+    <select id="getChemistryRanks" resultType="Map">
+        WITH chemistry_ranking AS (
+            SELECT
+                r1.partner_id,
+                r1.partner_name,
+                r1.chemistry_score,
+                r1.identical_answers,
+                r1.total_questions,
+                r2.mbti_result,
+                ROW_NUMBER() OVER (
+            PARTITION BY r1.partner_id
+            ORDER BY r1.chemistry_score DESC
+        ) as rank_num
+            FROM
+                mbti_test_record r1
+                    LEFT JOIN mbti_test_record r2
+                              ON r1.room_id = r2.room_id
+                                  AND r1.partner_id = r2.user_id
+                                  AND r2.test_type = '2'  -- 明确关联条件
+            WHERE
+                r1.user_id = #{userId}
+              AND r1.test_type = '2'
+              AND r1.partner_id IS NOT NULL
+              AND r1.chemistry_score IS NOT NULL
+        )
+        SELECT
+            partner_id,
+            partner_name AS partnerName,
+            chemistry_score AS chemistryScore,
+            identical_answers AS identicalAnswers,
+            total_questions AS totalQuestions,
+            mbti_result AS partnerMbtiType
+        FROM
+            chemistry_ranking
+        WHERE
+            rank_num = 1  -- 每个partner保留最高默契度记录
+        ORDER BY
+            chemistryScore DESC
+            LIMIT 10;
+    </select>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiPersonalityTypeMapper">
+
+    <resultMap type="MbtiPersonalityType" id="MbtiPersonalityTypeResult">
+        <result property="typeId"    column="type_id"    />
+        <result property="typeCode"    column="type_code"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="description"    column="description"    />
+        <result property="characteristics"    column="characteristics"    />
+        <result property="strengths"    column="strengths"    />
+        <result property="weaknesses"    column="weaknesses"    />
+        <result property="careerSuggestions"    column="career_suggestions"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiPersonalityTypeVo">
+        select type_id, type_code, type_name, description, characteristics, strengths, weaknesses, career_suggestions, create_by, create_time, update_by, update_time, remark from mbti_personality_type
+    </sql>
+
+    <select id="selectMbtiPersonalityTypeList" parameterType="MbtiPersonalityType" resultMap="MbtiPersonalityTypeResult">
+        <include refid="selectMbtiPersonalityTypeVo"/>
+        <where>
+            <if test="typeCode != null  and typeCode != ''"> and type_code = #{typeCode}</if>
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="characteristics != null  and characteristics != ''"> and characteristics = #{characteristics}</if>
+            <if test="strengths != null  and strengths != ''"> and strengths = #{strengths}</if>
+            <if test="weaknesses != null  and weaknesses != ''"> and weaknesses = #{weaknesses}</if>
+            <if test="careerSuggestions != null  and careerSuggestions != ''"> and career_suggestions = #{careerSuggestions}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiPersonalityTypeByTypeId" parameterType="Long" resultMap="MbtiPersonalityTypeResult">
+        <include refid="selectMbtiPersonalityTypeVo"/>
+        where type_id = #{typeId}
+    </select>
+
+    <insert id="insertMbtiPersonalityType" parameterType="MbtiPersonalityType" useGeneratedKeys="true" keyProperty="typeId">
+        insert into mbti_personality_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeCode != null and typeCode != ''">type_code,</if>
+            <if test="typeName != null and typeName != ''">type_name,</if>
+            <if test="description != null">description,</if>
+            <if test="characteristics != null">characteristics,</if>
+            <if test="strengths != null">strengths,</if>
+            <if test="weaknesses != null">weaknesses,</if>
+            <if test="careerSuggestions != null">career_suggestions,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeCode != null and typeCode != ''">#{typeCode},</if>
+            <if test="typeName != null and typeName != ''">#{typeName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="characteristics != null">#{characteristics},</if>
+            <if test="strengths != null">#{strengths},</if>
+            <if test="weaknesses != null">#{weaknesses},</if>
+            <if test="careerSuggestions != null">#{careerSuggestions},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiPersonalityType" parameterType="MbtiPersonalityType">
+        update mbti_personality_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeCode != null and typeCode != ''">type_code = #{typeCode},</if>
+            <if test="typeName != null and typeName != ''">type_name = #{typeName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="characteristics != null">characteristics = #{characteristics},</if>
+            <if test="strengths != null">strengths = #{strengths},</if>
+            <if test="weaknesses != null">weaknesses = #{weaknesses},</if>
+            <if test="careerSuggestions != null">career_suggestions = #{careerSuggestions},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteMbtiPersonalityTypeByTypeId" parameterType="Long">
+        delete from mbti_personality_type where type_id = #{typeId}
+    </delete>
+
+    <delete id="deleteMbtiPersonalityTypeByTypeIds" parameterType="String">
+        delete from mbti_personality_type where type_id in
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+</mapper>

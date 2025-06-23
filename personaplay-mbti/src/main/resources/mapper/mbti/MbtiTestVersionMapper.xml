@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiTestVersionMapper">
+
+    <resultMap type="MbtiTestVersion" id="MbtiTestVersionResult">
+        <result property="versionId"    column="version_id"    />
+        <result property="versionCode"    column="version_code"    />
+        <result property="versionName"    column="version_name"    />
+        <result property="questionCount"    column="question_count"    />
+        <result property="timeLimit"    column="time_limit"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiTestVersionVo">
+        select version_id, version_code, version_name, question_count, time_limit, description, status, create_by, create_time, update_by, update_time, remark from mbti_test_version
+    </sql>
+
+    <select id="selectMbtiTestVersionList" parameterType="MbtiTestVersion" resultMap="MbtiTestVersionResult">
+        <include refid="selectMbtiTestVersionVo"/>
+        <where>
+            <if test="versionCode != null  and versionCode != ''"> and version_code = #{versionCode}</if>
+            <if test="versionName != null  and versionName != ''"> and version_name like concat('%', #{versionName}, '%')</if>
+            <if test="questionCount != null "> and question_count = #{questionCount}</if>
+            <if test="timeLimit != null "> and time_limit = #{timeLimit}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiTestVersionByVersionId" parameterType="Long" resultMap="MbtiTestVersionResult">
+        <include refid="selectMbtiTestVersionVo"/>
+        where version_id = #{versionId}
+    </select>
+
+    <insert id="insertMbtiTestVersion" parameterType="MbtiTestVersion" useGeneratedKeys="true" keyProperty="versionId">
+        insert into mbti_test_version
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="versionCode != null and versionCode != ''">version_code,</if>
+            <if test="versionName != null and versionName != ''">version_name,</if>
+            <if test="questionCount != null">question_count,</if>
+            <if test="timeLimit != null">time_limit,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="versionCode != null and versionCode != ''">#{versionCode},</if>
+            <if test="versionName != null and versionName != ''">#{versionName},</if>
+            <if test="questionCount != null">#{questionCount},</if>
+            <if test="timeLimit != null">#{timeLimit},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiTestVersion" parameterType="MbtiTestVersion">
+        update mbti_test_version
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="versionCode != null and versionCode != ''">version_code = #{versionCode},</if>
+            <if test="versionName != null and versionName != ''">version_name = #{versionName},</if>
+            <if test="questionCount != null">question_count = #{questionCount},</if>
+            <if test="timeLimit != null">time_limit = #{timeLimit},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where version_id = #{versionId}
+    </update>
+
+    <delete id="deleteMbtiTestVersionByVersionId" parameterType="Long">
+        delete from mbti_test_version where version_id = #{versionId}
+    </delete>
+
+    <delete id="deleteMbtiTestVersionByVersionIds" parameterType="String">
+        delete from mbti_test_version where version_id in
+        <foreach item="versionId" collection="array" open="(" separator="," close=")">
+            #{versionId}
+        </foreach>
+    </delete>
+</mapper>

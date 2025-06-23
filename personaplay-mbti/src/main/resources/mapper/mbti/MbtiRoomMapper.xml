@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiRoomMapper">
+
+    <resultMap type="MbtiRoom" id="MbtiRoomResult">
+        <result property="roomId"    column="room_id"    />
+        <result property="roomCode"    column="room_code"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="versionId"    column="version_id"    />
+        <result property="status"    column="status"    />
+        <result property="memberLimit"    column="member_limit"    />
+        <result property="currentMembers"    column="current_members"    />
+        <result property="qrCodeUrl"    column="qr_code_url"    />
+        <result property="expireTime"    column="expire_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiRoomVo">
+        select room_id, room_code, creator_id, version_id, status, member_limit, current_members, qr_code_url, expire_time, create_by, create_time, update_by, update_time, remark from mbti_room
+    </sql>
+
+    <select id="selectMbtiRoomList" parameterType="MbtiRoom" resultMap="MbtiRoomResult">
+        <include refid="selectMbtiRoomVo"/>
+        <where>
+            <if test="roomCode != null  and roomCode != ''"> and room_code = #{roomCode}</if>
+            <if test="creatorId != null "> and creator_id = #{creatorId}</if>
+            <if test="versionId != null "> and version_id = #{versionId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="memberLimit != null "> and member_limit = #{memberLimit}</if>
+            <if test="currentMembers != null "> and current_members = #{currentMembers}</if>
+            <if test="qrCodeUrl != null  and qrCodeUrl != ''"> and qr_code_url = #{qrCodeUrl}</if>
+            <if test="expireTime != null "> and expire_time = #{expireTime}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiRoomByRoomId" parameterType="Long" resultMap="MbtiRoomResult">
+        <include refid="selectMbtiRoomVo"/>
+        where room_id = #{roomId}
+    </select>
+
+    <insert id="insertMbtiRoom" parameterType="MbtiRoom" useGeneratedKeys="true" keyProperty="roomId">
+        insert into mbti_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomCode != null and roomCode != ''">room_code,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="versionId != null">version_id,</if>
+            <if test="status != null">status,</if>
+            <if test="memberLimit != null">member_limit,</if>
+            <if test="currentMembers != null">current_members,</if>
+            <if test="qrCodeUrl != null">qr_code_url,</if>
+            <if test="expireTime != null">expire_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomCode != null and roomCode != ''">#{roomCode},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="versionId != null">#{versionId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="memberLimit != null">#{memberLimit},</if>
+            <if test="currentMembers != null">#{currentMembers},</if>
+            <if test="qrCodeUrl != null">#{qrCodeUrl},</if>
+            <if test="expireTime != null">#{expireTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiRoom" parameterType="MbtiRoom">
+        update mbti_room
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roomCode != null and roomCode != ''">room_code = #{roomCode},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="versionId != null">version_id = #{versionId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="memberLimit != null">member_limit = #{memberLimit},</if>
+            <if test="currentMembers != null">current_members = #{currentMembers},</if>
+            <if test="qrCodeUrl != null">qr_code_url = #{qrCodeUrl},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where room_id = #{roomId}
+    </update>
+
+    <delete id="deleteMbtiRoomByRoomId" parameterType="Long">
+        delete from mbti_room where room_id = #{roomId}
+    </delete>
+
+    <delete id="deleteMbtiRoomByRoomIds" parameterType="String">
+        delete from mbti_room where room_id in
+        <foreach item="roomId" collection="array" open="(" separator="," close=")">
+            #{roomId}
+        </foreach>
+    </delete>
+</mapper>

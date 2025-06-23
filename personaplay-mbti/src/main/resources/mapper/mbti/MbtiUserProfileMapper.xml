@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiUserProfileMapper">
+
+    <resultMap type="MbtiUserProfile" id="MbtiUserProfileResult">
+        <result property="profileId"    column="profile_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="mbtiType"    column="mbti_type"    />
+        <result property="latestTestTime"    column="latest_test_time"    />
+        <result property="eIScore"    column="e_i_score"    />
+        <result property="sNScore"    column="s_n_score"    />
+        <result property="tFScore"    column="t_f_score"    />
+        <result property="jPScore"    column="j_p_score"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiUserProfileVo">
+        select profile_id, user_id, mbti_type, latest_test_time, e_i_score, s_n_score, t_f_score, j_p_score, create_by, create_time, update_by, update_time, remark from mbti_user_profile
+    </sql>
+
+    <select id="selectMbtiUserProfileList" parameterType="MbtiUserProfile" resultMap="MbtiUserProfileResult">
+        <include refid="selectMbtiUserProfileVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="mbtiType != null  and mbtiType != ''"> and mbti_type = #{mbtiType}</if>
+            <if test="latestTestTime != null "> and latest_test_time = #{latestTestTime}</if>
+            <if test="eIScore != null "> and e_i_score = #{eIScore}</if>
+            <if test="sNScore != null "> and s_n_score = #{sNScore}</if>
+            <if test="tFScore != null "> and t_f_score = #{tFScore}</if>
+            <if test="jPScore != null "> and j_p_score = #{jPScore}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiUserProfileByProfileId" parameterType="Long" resultMap="MbtiUserProfileResult">
+        <include refid="selectMbtiUserProfileVo"/>
+        where profile_id = #{profileId}
+    </select>
+
+    <insert id="insertMbtiUserProfile" parameterType="MbtiUserProfile" useGeneratedKeys="true" keyProperty="profileId">
+        insert into mbti_user_profile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="mbtiType != null">mbti_type,</if>
+            <if test="latestTestTime != null">latest_test_time,</if>
+            <if test="eIScore != null">e_i_score,</if>
+            <if test="sNScore != null">s_n_score,</if>
+            <if test="tFScore != null">t_f_score,</if>
+            <if test="jPScore != null">j_p_score,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="mbtiType != null">#{mbtiType},</if>
+            <if test="latestTestTime != null">#{latestTestTime},</if>
+            <if test="eIScore != null">#{eIScore},</if>
+            <if test="sNScore != null">#{sNScore},</if>
+            <if test="tFScore != null">#{tFScore},</if>
+            <if test="jPScore != null">#{jPScore},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiUserProfile" parameterType="MbtiUserProfile">
+        update mbti_user_profile
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="mbtiType != null">mbti_type = #{mbtiType},</if>
+            <if test="latestTestTime != null">latest_test_time = #{latestTestTime},</if>
+            <if test="eIScore != null">e_i_score = #{eIScore},</if>
+            <if test="sNScore != null">s_n_score = #{sNScore},</if>
+            <if test="tFScore != null">t_f_score = #{tFScore},</if>
+            <if test="jPScore != null">j_p_score = #{jPScore},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where profile_id = #{profileId}
+    </update>
+
+    <delete id="deleteMbtiUserProfileByProfileId" parameterType="Long">
+        delete from mbti_user_profile where profile_id = #{profileId}
+    </delete>
+
+    <delete id="deleteMbtiUserProfileByProfileIds" parameterType="String">
+        delete from mbti_user_profile where profile_id in
+        <foreach item="profileId" collection="array" open="(" separator="," close=")">
+            #{profileId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,1625 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBTI性格测试</title>
+  <style>
+    :root {
+      --primary-color: #6a5acd;
+      --secondary-color: #9370db;
+      --accent-color: #ff7f50;
+      --light-bg: #f8f9fa;
+      --dark-bg: #343a40;
+      --text-color: #333;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+      --gradient-3: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      --card-hover-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+
+    body {
+      background: var(--gradient-1);
+      color: var(--text-color);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+      z-index: -1;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      animation: fadeIn 1s ease;
+      position: relative;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: var(--accent-color);
+      border-radius: 3px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 120px;
+      height: 120px;
+      background: var(--gradient-2);
+      opacity: 0.05;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--card-hover-shadow);
+    }
+
+    .test-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .option-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-3);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .option-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .option-card:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: scale(1.03);
+    }
+
+    .option-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .option-card p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .option-card:hover p {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: var(--accent-color);
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon::after {
+      content: "";
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: rgba(255,127,80,0.1);
+      border-radius: 50%;
+      z-index: -1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .option-card:hover .icon {
+      color: white;
+    }
+
+    .option-card:hover .icon::after {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .btn {
+      background: var(--primary-color);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 10px 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .btn:hover::after {
+      left: 100%;
+    }
+
+    .btn:hover {
+      background: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-wechat {
+      background: #07C160;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-wechat:hover {
+      background: #06AD56;
+    }
+
+    .room-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .room-id {
+      background: var(--light-bg);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      border: 2px dashed var(--secondary-color);
+    }
+
+    .question-container {
+      margin-top: 20px;
+      animation: slideUp 0.5s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: var(--dark-bg);
+      line-height: 1.6;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .answer-option {
+      padding: 15px 20px;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-left: 3px solid transparent;
+    }
+
+    .answer-option:hover {
+      background: var(--secondary-color);
+      color: white;
+      transform: translateX(5px);
+      border-left: 3px solid var(--accent-color);
+    }
+
+    .players-status {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .player {
+      text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      min-width: 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .player::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-3);
+    }
+
+    .player-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .player-status {
+      color: var(--accent-color);
+    }
+
+    .timer {
+      font-size: 2rem;
+      text-align: center;
+      margin: 20px 0;
+      color: var(--accent-color);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #eee;
+      border-radius: 5px;
+      margin: 20px 0;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 5px;
+      width: 0%;
+      transition: width 0.3s ease;
+      position: relative;
+    }
+
+    .progress::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 20px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: scaleIn 0.3s ease;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .modal-header::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: #eee;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: var(--accent-color);
+    }
+
+    .mbti-selector {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      padding: 20px;
+      background: var(--light-bg);
+      border-radius: 10px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .letter-selector {
+      text-align: center;
+      position: relative;
+      width: 23%;
+    }
+
+    .letter-display {
+      font-size: 2rem;
+      font-weight: bold;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+      color: var(--primary-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .letter-display::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 5px;
+      bottom: 0;
+      left: 0;
+      background: var(--gradient-3);
+      opacity: 0.3;
+    }
+
+    .letter-hint {
+      background: var(--primary-color);
+      color: white;
+      padding: 8px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      margin-top: 10px;
+      min-height: 60px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .selector-arrows {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .arrow {
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 5px;
+      color: var(--secondary-color);
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .arrow:hover {
+      transform: scale(1.2);
+      color: var(--accent-color);
+    }
+
+    .result-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-2);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .result-type {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      position: relative;
+    }
+
+    .result-type::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-color);
+      opacity: 0.5;
+    }
+
+    .result-name {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+    }
+
+    .result-description {
+      margin-bottom: 15px;
+      line-height: 1.6;
+      color: #444;
+    }
+
+    .compatibility {
+      background: var(--light-bg);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      position: relative;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .compatibility::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--gradient-2);
+      border-radius: 8px 0 0 8px;
+    }
+
+    .compatibility-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+
+    .qrcode {
+      width: 150px;
+      height: 150px;
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .qrcode::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 2px dashed rgba(0,0,0,0.1);
+      border-radius: 6px;
+      z-index: 0;
+    }
+
+    .qrcode img {
+      max-width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .share-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    /* 底部导航 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #666;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary-color);
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+
+    /* 我的页面 */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 20px;
+      border: 3px solid white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: white;
+    }
+
+    .profile-mbti {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-mbti-type {
+      background: rgba(255,255,255,0.2);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    .history-item {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .history-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--gradient-2);
+    }
+
+    .history-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+
+    .history-date {
+      background: var(--light-bg);
+      border-radius: 5px;
+      padding: 8px;
+      text-align: center;
+      min-width: 60px;
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+    }
+
+    .history-date-day {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 3px;
+      color: var(--primary-color);
+    }
+
+    .history-content {
+      flex: 1;
+    }
+
+    .history-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: var(--dark-bg);
+    }
+
+    .history-type {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .history-mbti {
+      background: var(--light-bg);
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    .history-with {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .history-arrow {
+      color: #999;
+      font-size: 1.2rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* 适配不同设备 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .option-card {
+        padding: 15px;
+      }
+
+      .modal-content {
+        padding: 20px;
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- 底部导航栏 -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="showHomePage()">
+    <div class="nav-icon">🏠</div>
+    <div>首页</div>
+  </div>
+  <div class="nav-item" onclick="showTestHistory()">
+    <div class="nav-icon">📊</div>
+    <div>我的</div>
+  </div>
+</div>
+
+<!-- 首页 -->
+<div class="container" id="home-page">
+  <header>
+    <h1>MBTI 性格测试</h1>
+    <p class="subtitle">探索你的性格，了解你的内心世界</p>
+  </header>
+
+  <div class="card">
+    <h2>选择测试模式</h2>
+    <div class="test-options">
+      <div class="option-card" onclick="showSingleTestOptions()">
+        <div class="icon">👤</div>
+        <h3>单人测试</h3>
+        <p>深入了解自己的性格类型和特点</p>
+      </div>
+      <div class="option-card" onclick="showDualTestOptions()">
+        <div class="icon">👥</div>
+        <h3>双人测试</h3>
+        <p>与朋友一起测试，比较彼此的性格差异</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 单人测试选项页 -->
+<div class="container" id="single-test-options-page" style="display: none;">
+  <header>
+    <h1>单人测试</h1>
+    <p class="subtitle">选择测试版本开始探索</p>
+  </header>
+
+  <div class="card">
+    <h2>选择测试版本</h2>
+    <div class="test-options">
+      <div class="option-card" onclick="startSingleTest('short')">
+        <div class="icon">⚡</div>
+        <h3>简短版 (20题)</h3>
+        <p>快速了解基本性格特点</p>
+      </div>
+      <div class="option-card" onclick="startSingleTest('standard')">
+        <div class="icon">⭐</div>
+        <h3>标准版 (60题)</h3>
+        <p>全面了解性格各个维度</p>
+      </div>
+      <div class="option-card" onclick="startSingleTest('full')">
+        <div class="icon">🔍</div>
+        <h3>完整版 (93题)</h3>
+        <p>深入探索性格的细微差别</p>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+      <button class="btn btn-outline" onclick="showHomePage()">返回</button>
+    </div>
+  </div>
+</div>
+
+<!-- 双人测试选项页 -->
+<div class="container" id="dual-test-options-page" style="display: none;">
+  <header>
+    <h1>双人测试</h1>
+    <p class="subtitle">与朋友一起探索性格</p>
+  </header>
+
+  <div class="card">
+    <h2>选择操作</h2>
+    <div class="test-options">
+      <div class="option-card" onclick="createRoom()">
+        <div class="icon">🏠</div>
+        <h3>创建房间</h3>
+        <p>创建一个新的测试房间并邀请朋友</p>
+      </div>
+      <div class="option-card" onclick="showJoinRoomPage()">
+        <div class="icon">🚪</div>
+        <h3>加入房间</h3>
+        <p>通过房间号加入朋友的测试</p>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+      <button class="btn btn-outline" onclick="showHomePage()">返回</button>
+    </div>
+  </div>
+</div>
+
+<!-- 创建房间页面 -->
+<div class="container" id="create-room-page" style="display: none;">
+  <header>
+    <h1>创建测试房间</h1>
+    <p class="subtitle">邀请朋友一起测试</p>
+  </header>
+
+  <div class="card">
+    <h2>测试设置</h2>
+    <div style="margin: 20px 0;">
+      <p style="margin-bottom: 20px; color: var(--primary-color); font-weight: bold;">你已通过微信授权登录，昵称: <span id="wx-nickname">微信用户</span></p>
+
+      <label style="display: block; margin-bottom: 10px;">选择测试版本:</label>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+        <button class="btn btn-outline" onclick="selectTestVersion('short')">简短版 (20题)</button>
+        <button class="btn btn-outline" onclick="selectTestVersion('standard')">标准版 (60题)</button>
+        <button class="btn btn-outline" onclick="selectTestVersion('full')">完整版 (93题)</button>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="btn" onclick="generateRoom()">创建房间</button>
+      <button class="btn btn-outline" onclick="showDualTestOptions()">返回</button>
+    </div>
+  </div>
+</div>
+
+<!-- 房间信息页面 -->
+<div class="container" id="room-info-page" style="display: none;">
+  <header>
+    <h1>房间已创建</h1>
+    <p class="subtitle">邀请朋友加入你的测试</p>
+  </header>
+
+  <div class="card">
+    <h2>房间信息</h2>
+    <div class="room-info">
+      <div class="room-id">房间号: <span id="room-id">123456</span></div>
+      <button class="btn" onclick="copyRoomId()">复制</button>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <p style="margin-bottom: 15px;">扫描二维码加入</p>
+      <div class="qrcode">
+        <img src="https://via.placeholder.com/150" alt="QR Code">
+      </div>
+
+      <div class="share-options">
+        <button class="btn" onclick="shareLink()">分享链接</button>
+        <button class="btn" onclick="downloadQRCode()">保存二维码</button>
+      </div>
+    </div>
+
+    <div class="players-status">
+      <div class="player">
+        <div class="player-name" id="player1-name">玩家1</div>
+        <div class="player-status">已准备</div>
+      </div>
+      <div class="player">
+        <div class="player-name" id="player2-name">等待加入...</div>
+        <div class="player-status">未准备</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <button id="start-test-btn" class="btn" disabled>开始测试</button>
+      <button class="btn btn-outline" onclick="exitRoom()">退出房间</button>
+    </div>
+  </div>
+</div>
+
+<!-- 加入房间页面 -->
+<div class="container" id="join-room-page" style="display: none;">
+  <header>
+    <h1>加入测试房间</h1>
+    <p class="subtitle">输入房间号加入好友的测试</p>
+  </header>
+
+  <div class="card">
+    <h2>输入房间信息</h2>
+    <div style="margin: 20px 0;">
+      <label for="room-code" style="display: block; margin-bottom: 10px;">房间号:</label>
+      <input type="text" id="room-code" placeholder="输入6位房间号" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+
+      <button class="btn btn-wechat" style="width: 100%; margin-bottom: 20px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M8.69,11.71a1.23,1.23,0,1,1,1.24-1.23A1.24,1.24,0,0,1,8.69,11.71Zm3.92-2.45a1.23,1.23,0,1,0,1.23,1.22A1.24,1.24,0,0,0,12.61,9.26ZM19.62,12a7.7,7.7,0,0,0-8.35-7.66,7.7,7.7,0,0,0-8.35,7.66,7.7,7.7,0,0,0,3.84,6.62l-.78,2.36a.32.32,0,0,0,.47.39l2.75-1.41A8.51,8.51,0,0,0,11.27,20,7.7,7.7,0,0,0,19.62,12Z"/>
+        </svg>
+        微信授权登录
+      </button>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="btn" onclick="joinRoom()">加入房间</button>
+      <button class="btn btn-outline" onclick="showDualTestOptions()">返回</button>
+    </div>
+  </div>
+</div>
+
+<!-- 测试问题页面 -->
+<div class="container" id="test-page" style="display: none;">
+  <header>
+    <h1>MBTI 性格测试</h1>
+    <p class="subtitle" id="test-version-title">标准版测试 (60题)</p>
+  </header>
+
+  <div class="card">
+    <div class="progress-bar">
+      <div class="progress" id="test-progress" style="width: 30%;"></div>
+    </div>
+
+    <div id="dual-test-info" style="display: none;">
+      <div class="players-status">
+        <div class="player">
+          <div class="player-name">玩家1</div>
+          <div class="player-status">已回答</div>
+        </div>
+        <div class="player">
+          <div class="player-name">玩家2</div>
+          <div class="player-status">思考中...</div>
+        </div>
+      </div>
+      <div class="timer">25</div>
+    </div>
+
+    <div class="question-container">
+      <div class="question" id="current-question">
+        在社交场合中，你通常会...
+      </div>
+
+      <div class="answers">
+        <div class="answer-option" onclick="selectAnswer(0)">
+          主动与他人交谈，扩展自己的社交圈
+        </div>
+        <div class="answer-option" onclick="selectAnswer(1)">
+          与少数几个熟人交流，保持一定的社交距离
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+  <!-- 结果页面 -->
+  <div class="container" id="results-page" style="display: none;">
+    <header>
+      <h1>测试结果</h1>
+      <p class="subtitle">探索你的性格特点</p>
+    </header>
+    <!-- 单人测试结果 -->
+    <div id="single-results" style="display: none;">
+      <div class="card">
+        <div class="result-header">
+          <div class="result-type" id="single-result-type">ENFP</div>
+          <div class="result-name">活力型人格</div>
+        </div>
+        <div class="result-description" id="single-result-description">
+          热情洋溢、富有创造力、好奇心强，喜欢探索各种可能性。你充满活力和热情，擅长与人交往，洞察力敏锐。你的创新思维和适应性使你能在各种环境中茁壮成长。
+        </div>
+        <div style="margin-top: 20px;">
+          <h3>性格特点</h3>
+          <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.5;">
+            <li>热情外向，善于与人交往</li>
+            <li>富有创造力和想象力</li>
+            <li>灵活适应，善于应对变化</li>
+            <li>关注可能性而非现实</li>
+            <li>直觉强，感受力丰富</li>
+          </ul>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+          <button class="btn" onclick="saveTestResult()">保存结果</button>
+          <button class="btn btn-outline" onclick="showHomePage()">返回首页</button>
+        </div>
+      </div>
+    </div>
+    <!-- 双人测试结果 -->
+    <div id="dual-results" style="display: none;">
+      <div class="card">
+        <h2 style="margin-bottom: 20px;">你们的结果已准备好</h2>
+        <p>在公布结果前，你们可以尝试猜测对方的MBTI类型！</p>
+        <div style="display: flex; justify-content: space-around; margin: 30px 0; flex-wrap: wrap; gap: 10px;">
+          <button class="btn" onclick="showGuessMBTIModal('player2')">猜测对方类型</button>
+          <button class="btn btn-outline" onclick="revealResults()">直接查看结果</button>
+        </div>
+      </div>
+      <div id="dual-results-revealed" style="display: none;">
+        <div class="result-card">
+          <h3 id="player1-name-result">玩家1</h3>
+          <div class="result-header">
+            <div class="result-type" id="player1-result-type">INTJ</div>
+            <div class="result-name">建筑师型人格</div>
+          </div>
+          <div class="result-description" id="player1-result-description">
+            具有战略思维的创新者，强调知识和能力，追求持续改进和效率。你独立、果断、有条理，善于制定长期计划和解决复杂问题。
+          </div>
+        </div>
+        <div class="result-card">
+          <h3 id="player2-name-result">玩家2</h3>
+          <div class="result-header">
+            <div class="result-type" id="player2-result-type">ESFP</div>
+            <div class="result-name">表演者型人格</div>
+          </div>
+          <div class="result-description" id="player2-result-description">
+            热爱生活的表演者，自发、充满活力、乐于娱乐他人。你外向、富有同情心，喜欢与人互动，享受当下，适应性强，不拘泥于规则。
+          </div>
+        </div>
+        <div class="compatibility">
+          <div class="compatibility-title">你们的关系相处指南</div>
+          <div id="compatibility-description">
+            <p><strong>优势互补:</strong> INTJ的战略思维和ESFP的现实感知能形成良好互补，一个关注未来和可能性，一个关注当下和实际体验。</p>
+            <p><strong>潜在挑战:</strong> INTJ可能觉得ESFP过于冲动和缺乏规划，而ESFP可能认为INTJ过于严肃和缺乏情感表达。</p>
+            <p><strong>相处建议:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+              <li>INTJ需要理解ESFP享受当下的天性，给予其自由和表达的空间</li>
+              <li>ESFP应尊重INTJ需要独处思考的需求，不要将其视为冷漠</li>
+              <li>建立开放的沟通方式，分享各自的想法和需求</li>
+              <li>共同设定目标和计划，互相学习对方的长处</li>
+            </ul>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+          <button class="btn" onclick="saveTestResult()">保存结果</button>
+          <button class="btn btn-outline" onclick="showHomePage()">返回首页</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 我的页面 -->
+  <div class="container" id="profile-page" style="display: none;">
+    <header>
+      <h1>我的MBTI</h1>
+      <p class="subtitle">查看你的测试历史和结果</p>
+    </header>
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img src="https://via.placeholder.com/80" alt="用户头像" id="user-avatar">
+      </div>
+      <div class="profile-info">
+        <div class="profile-name" id="profile-name">微信用户</div>
+        <div class="profile-mbti">
+          <span>最近测试结果:</span>
+          <span class="profile-mbti-type" id="latest-mbti">ENFP</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>测试历史</h2>
+      <div id="test-history-list">
+        <!-- 历史测试记录 -->
+        <div class="history-item" onclick="showHistoryDetail('202305101')">
+          <div class="history-date">
+            <div class="history-date-day">15</div>
+            <div>6月</div>
+          </div>
+          <div class="history-content">
+            <div class="history-title">标准版测试</div>
+            <div class="history-type">
+              <span class="history-mbti">ENFP</span>
+              <span class="history-with">单人测试</span>
+            </div>
+          </div>
+          <div class="history-arrow">›</div>
+        </div>
+        <div class="history-item" onclick="showHistoryDetail('202305102')">
+          <div class="history-date">
+            <div class="history-date-day">10</div>
+            <div>6月</div>
+          </div>
+          <div class="history-content">
+            <div class="history-title">双人测试</div>
+            <div class="history-type">
+              <span class="history-mbti">INTJ</span>
+              <span class="history-with">与 好友A</span>
+            </div>
+          </div>
+          <div class="history-arrow">›</div>
+        </div>
+        <div class="history-item" onclick="showHistoryDetail('202305103')">
+          <div class="history-date">
+            <div class="history-date-day">05</div>
+            <div>6月</div>
+          </div>
+          <div class="history-content">
+            <div class="history-title">简短版测试</div>
+            <div class="history-type">
+              <span class="history-mbti">ENFJ</span>
+              <span class="history-with">单人测试</span>
+            </div>
+          </div>
+          <div class="history-arrow">›</div>
+        </div>
+        <div class="history-item" onclick="showHistoryDetail('202305104')">
+          <div class="history-date">
+            <div class="history-date-day">28</div>
+            <div>5月</div>
+          </div>
+          <div class="history-content">
+            <div class="history-title">双人测试</div>
+            <div class="history-type">
+              <span class="history-mbti">ENFP</span>
+              <span class="history-with">与 好友B</span>
+            </div>
+          </div>
+          <div class="history-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 历史记录详情弹窗 -->
+  <div class="modal" id="history-detail-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">测试结果详情</div>
+        <button class="close-btn" onclick="closeModal('history-detail-modal')">&times;</button>
+      </div>
+      <div id="history-detail-content">
+        <!-- 动态加载历史记录详情 -->
+      </div>
+    </div>
+  </div>
+  <!-- 猜测MBTI类型弹窗 -->
+  <div class="modal" id="guess-mbti-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">猜测<span id="guessing-player-name">玩家2</span>的MBTI类型</div>
+        <button class="close-btn" onclick="closeModal('guess-mbti-modal')">&times;</button>
+      </div>
+      <div class="mbti-selector">
+        <div class="letter-selector">
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(0, 'up')">▲</div>
+          </div>
+          <div class="letter-display" id="letter-1">E</div>
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(0, 'down')">▼</div>
+          </div>
+          <div class="letter-hint">
+            <strong>E: 外向型</strong><br>
+            从外部世界获取能量
+          </div>
+        </div>
+        <div class="letter-selector">
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(1, 'up')">▲</div>
+          </div>
+          <div class="letter-display" id="letter-2">N</div>
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(1, 'down')">▼</div>
+          </div>
+          <div class="letter-hint">
+            <strong>N: 直觉型</strong><br>
+            关注概念和可能性
+          </div>
+        </div>
+        <div class="letter-selector">
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(2, 'up')">▲</div>
+          </div>
+          <div class="letter-display" id="letter-3">F</div>
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(2, 'down')">▼</div>
+          </div>
+          <div class="letter-hint">
+            <strong>F: 情感型</strong><br>
+            基于价值观和感受决策
+          </div>
+        </div>
+        <div class="letter-selector">
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(3, 'up')">▲</div>
+          </div>
+          <div class="letter-display" id="letter-4">P</div>
+          <div class="selector-arrows">
+            <div class="arrow" onclick="scrollLetter(3, 'down')">▼</div>
+          </div>
+          <div class="letter-hint">
+            <strong>P: 感知型</strong><br>
+            灵活、适应性强，保持开放
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 20px; text-align: center;">
+        <button class="btn" onclick="submitGuess()">提交猜测</button>
+        <button class="btn btn-outline" onclick="skipGuessing()">跳过猜测</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // 微信授权相关
+    function initWechatAuth() {
+// 模拟微信授权成功后的回调
+      setTimeout(() => {
+// 更新用户信息
+        document.getElementById('wx-nickname').textContent = '张小明';
+        document.getElementById('profile-name').textContent = '张小明';
+        document.getElementById('user-avatar').src = 'https://via.placeholder.com/80/3498db/ffffff?text=张';
+      }, 1000);
+    }
+    // 页面初始化
+    window.onload = function() {
+      initWechatAuth();
+    };
+    // 显示主页
+    function showHomePage() {
+      document.getElementById('home-page').style.display = 'block';
+      document.getElementById('single-test-options-page').style.display = 'none';
+      document.getElementById('dual-test-options-page').style.display = 'none';
+      document.getElementById('create-room-page').style.display = 'none';
+      document.getElementById('room-info-page').style.display = 'none';
+      document.getElementById('join-room-page').style.display = 'none';
+      document.getElementById('test-page').style.display = 'none';
+      document.getElementById('results-page').style.display = 'none';
+      document.getElementById('profile-page').style.display = 'none';
+// 更新底部导航状态
+      updateNavState('home');
+    }
+    // 显示测试历史页面
+    function showTestHistory() {
+      document.getElementById('home-page').style.display = 'none';
+      document.getElementById('single-test-options-page').style.display = 'none';
+      document.getElementById('dual-test-options-page').style.display = 'none';
+      document.getElementById('create-room-page').style.display = 'none';
+      document.getElementById('room-info-page').style.display = 'none';
+      document.getElementById('join-room-page').style.display = 'none';
+      document.getElementById('test-page').style.display = 'none';
+      document.getElementById('results-page').style.display = 'none';
+      document.getElementById('profile-page').style.display = 'block';
+// 更新底部导航状态
+      updateNavState('profile');
+    }
+    // 更新底部导航状态
+    function updateNavState(active) {
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.classList.remove('active');
+      });
+      if (active === 'home') {
+        navItems[0].classList.add('active');
+      } else if (active === 'profile') {
+        navItems[1].classList.add('active');
+      }
+    }
+    // 显示单人测试选项
+    function showSingleTestOptions() {
+      document.getElementById('home-page').style.display = 'none';
+      document.getElementById('single-test-options-page').style.display = 'block';
+    }
+    // 显示双人测试选项
+    function showDualTestOptions() {
+      document.getElementById('home-page').style.display = 'none';
+      document.getElementById('dual-test-options-page').style.display = 'block';
+      document.getElementById('create-room-page').style.display = 'none';
+      document.getElementById('join-room-page').style.display = 'none';
+    }
+    // 开始单人测试
+    function startSingleTest(version) {
+      document.getElementById('single-test-options-page').style.display = 'none';
+      document.getElementById('test-page').style.display = 'block';
+      document.getElementById('dual-test-info').style.display = 'none';
+      let versionText = '标准版';
+      let questionCount = 60;
+      if (version === 'short') {
+        versionText = '简短版';
+        questionCount = 20;
+      } else if (version === 'full') {
+        versionText = '完整版';
+        questionCount = 93;
+      }
+      document.getElementById('test-version-title').textContent = ${versionText}测试 (${questionCount}题);
+      document.getElementById('test-progress').style.width = '5%';
+// 这里可以加载测试题目
+    }
+    // 创建房间页面
+    function createRoom() {
+      document.getElementById('dual-test-options-page').style.display = 'none';
+      document.getElementById('create-room-page').style.display = 'block';
+    }
+    // 加入房间页面
+    function showJoinRoomPage() {
+      document.getElementById('dual-test-options-page').style.display = 'none';
+      document.getElementById('join-room-page').style.display = 'block';
+    }
+    // 生成房间
+    function generateRoom() {
+      document.getElementById('create-room-page').style.display = 'none';
+      document.getElementById('room-info-page').style.display = 'block';
+      document.getElementById('player1-name').textContent = document.getElementById('wx-nickname').textContent;
+// 生成随机房间号
+      const roomId = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('room-id').textContent = roomId;
+// 模拟玩家2加入
+      setTimeout(() => {
+        document.getElementById('player2-name').textContent = '玩家2';
+        document.getElementById('start-test-btn').disabled = false;
+// 添加开始测试事件监听
+        document.getElementById('start-test-btn').onclick = function() {
+          startDualTest();
+        };
+      }, 3000);
+    }
+    // 加入房间
+    function joinRoom() {
+      const roomCode = document.getElementById('room-code').value;
+      if (!roomCode) {
+        alert('请输入房间号');
+        return;
+      }
+// 这里应该是验证房间号并加入房间的逻辑
+// 演示直接跳转到测试页面
+      startDualTest();
+    }
+    // 开始双人测试
+    function startDualTest() {
+      document.getElementById('room-info-page').style.display = 'none';
+      document.getElementById('join-room-page').style.display = 'none';
+      document.getElementById('test-page').style.display = 'block';
+      document.getElementById('dual-test-info').style.display = 'block';
+// 设置测试信息
+      document.getElementById('test-version-title').textContent = '双人测试 (60题)';
+      document.getElementById('test-progress').style.width = '5%';
+// 这里可以加载测试题目
+    }
+    // 选择答案
+    function selectAnswer(index) {
+// 更新进度条
+      const currentWidth = parseInt(document.getElementById('test-progress').style.width);
+      const newWidth = Math.min(currentWidth + 5, 100);
+      document.getElementById('test-progress').style.width = newWidth + '%';
+// 如果测试完成，显示结果页面
+      if (newWidth >= 100) {
+        showResults();
+      } else {
+// 这里可以加载下一题
+      }
+    }
+    // 选择测试版本
+    function selectTestVersion(version) {
+// 可以在这里设置选中的样式
+      const buttons = document.querySelectorAll('#create-room-page .btn-outline');
+      buttons.forEach(btn => {
+        btn.style.background = 'transparent';
+        btn.style.color = 'var(--primary-color)';
+      });
+      event.target.style.background = 'var(--primary-color)';
+      event.target.style.color = 'white';
+    }
+    // 复制房间号
+    function copyRoomId() {
+      const roomId = document.getElementById('room-id').textContent;
+      navigator.clipboard.writeText(roomId).then(() => {
+        alert('房间号已复制到剪贴板');
+      });
+    }
+    // 分享链接
+    function shareLink() {
+      const roomId = document.getElementById('room-id').textContent;
+      const shareUrl = ${window.location.origin}${window.location.pathname}?room=${roomId};
+      if (navigator.share) {
+        navigator.share({
+          title: 'MBTI双人测试',
+          text: '来和我一起做MBTI测试吧！',
+          url: shareUrl
+        });
+      } else {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          alert('邀请链接已复制到剪贴板');
+        });
+      }
+    }
+    // 下载二维码
+    function downloadQRCode() {
+// 实际应用中需要实现二维码下载逻辑
+      alert('二维码已保存');
+    }
+    // 退出房间
+    function exitRoom() {
+      document.getElementById('room-info-page').style.display = 'none';
+      document.getElementById('dual-test-options-page').style.display = 'block';
+    }
+    // 显示结果
+    function showResults() {
+      document.getElementById('test-page').style.display = 'none';
+      document.getElementById('results-page').style.display = 'block';
+// 根据测试模式显示不同的结果
+      if (document.getElementById('dual-test-info').style.display === 'block') {
+        document.getElementById('single-results').style.display = 'none';
+        document.getElementById('dual-results').style.display = 'block';
+      } else {
+        document.getElementById('single-results').style.display = 'block';
+        document.getElementById('dual-results').style.display = 'none';
+      }
+    }
+    // 显示猜测MBTI类型弹窗
+    function showGuessMBTIModal(playerName) {
+      document.getElementById('guess-mbti-modal').style.display = 'flex';
+      document.getElementById('guessing-player-name').textContent = playerName;
+    }
+    // 关闭弹窗
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+    // 展示结果
+    function revealResults() {
+      document.getElementById('dual-results-revealed').style.display = 'block';
+    }
+    // 保存测试结果
+    function saveTestResult() {
+      alert('测试结果已保存到您的历史记录中');
+      showHomePage();
+    }
+    // 滑动选择字母
+    function scrollLetter(index, direction) {
+      const letters = [
+        ['E', 'I'],
+        ['N', 'S'],
+        ['F', 'T'],
+        ['P', 'J']
+      ];
+      const currentLetter = document.getElementById(letter-${index+1}).textContent;
+      const currentIndex = letters[index].indexOf(currentLetter);
+      let newIndex;
+      if (direction === 'up') {
+        newIndex = (currentIndex - 1 + letters[index].length) % letters[index].length;
+      } else {
+        newIndex = (currentIndex + 1) % letters[index].length;
+      }
+      document.getElementById(letter-${index+1}).textContent = letters[index][newIndex];
+      updateLetterHint(index, letters[index][newIndex]);
+    }
+    // 更新字母提示
+    function updateLetterHint(index, letter) {
+      const hints = {
+        'E': '<strong>E: 外向型</strong><br>从外部世界获取能量',
+        'I': '<strong>I: 内向型</strong><br>从内心世界获取能量',
+        'N': '<strong>N: 直觉型</strong><br>关注概念和可能性',
+        'S': '<strong>S: 感觉型</strong><br>关注现实和细节',
+        'F': '<strong>F: 情感型</strong><br>基于价值观和感受决策',
+        'T': '<strong>T: 思考型</strong><br>基于逻辑和客观分析决策',
+        'P': '<strong>P: 感知型</strong><br>灵活、适应性强，保持开放',
+        'J': '<strong>J: 判断型</strong><br>有计划、有条理，喜欢确定性'
+      };
+      const letterSelector = document.querySelectorAll('.letter-selector')[index];
+      letterSelector.querySelector('.letter-hint').innerHTML = hints[letter];
+    }
+    // 提交猜测
+    function submitGuess() {
+      const mbti =
+        document.getElementById('letter-1').textContent +
+        document.getElementById('letter-2').textContent +
+        document.getElementById('letter-3').textContent +
+        document.getElementById('letter-4').textContent;
+      alert(你猜测的MBTI类型是: ${mbti});
+      closeModal('guess-mbti-modal');
+      revealResults();
+    }
+    // 跳过猜测
+    function skipGuessing() {
+      closeModal('guess-mbti-modal');
+      revealResults();
+    }
+    // 显示历史记录详情
+    function showHistoryDetail(historyId) {
+      document.getElementById('history-detail-modal').style.display = 'flex';
+// 根据历史ID加载详情
+      const detailContent = document.getElementById('history-detail-content');
+// 这里应该是通过API获取历史记录详情
+// 演示直接设置内容
+      detailContent.innerHTML = <div class="result-header"> <div class="result-type">ENFP</div> <div class="result-name">活力型人格</div> </div> <div style="margin: 15px 0; color: #666;"> <p>测试日期: 2023-06-15</p> <p>测试版本: 标准版 (60题)</p> </div> <div class="result-description"> 热情洋溢、富有创造力、好奇心强，喜欢探索各种可能性。你充满活力和热情，擅长与人交往，洞察力敏锐。你的创新思维和适应性使你能在各种环境中茁壮成长。 </div> <div style="margin-top: 20px;"> <h3>性格特点</h3> <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.5;"> <li>热情外向，善于与人交往</li> <li>富有创造力和想象力</li> <li>灵活适应，善于应对变化</li> <li>关注可能性而非现实</li> <li>直觉强，感受力丰富</li> </ul> </div> ;
+    }
+  </script>
+</body>
+</html>

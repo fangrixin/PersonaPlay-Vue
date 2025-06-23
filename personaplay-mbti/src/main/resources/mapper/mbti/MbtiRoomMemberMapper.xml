@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiRoomMemberMapper">
+
+    <resultMap type="MbtiRoomMember" id="MbtiRoomMemberResult">
+        <result property="memberId"    column="member_id"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="isReady"    column="is_ready"    />
+        <result property="isCreator"    column="is_creator"    />
+        <result property="joinTime"    column="join_time"    />
+        <result property="readyTime"    column="ready_time"    />
+        <result property="testRecordId"    column="test_record_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiRoomMemberVo">
+        select member_id, room_id, user_id, is_ready, is_creator, join_time, ready_time, test_record_id, create_by, create_time, update_by, update_time, remark from mbti_room_member
+    </sql>
+
+    <select id="selectMbtiRoomMemberList" parameterType="MbtiRoomMember" resultMap="MbtiRoomMemberResult">
+        <include refid="selectMbtiRoomMemberVo"/>
+        <where>
+            <if test="roomId != null "> and room_id = #{roomId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="isReady != null "> and is_ready = #{isReady}</if>
+            <if test="isCreator != null "> and is_creator = #{isCreator}</if>
+            <if test="joinTime != null "> and join_time = #{joinTime}</if>
+            <if test="readyTime != null "> and ready_time = #{readyTime}</if>
+            <if test="testRecordId != null "> and test_record_id = #{testRecordId}</if>
+        </where>
+    </select>
+
+    <select id="selectMbtiRoomMemberByMemberId" parameterType="Long" resultMap="MbtiRoomMemberResult">
+        <include refid="selectMbtiRoomMemberVo"/>
+        where member_id = #{memberId}
+    </select>
+
+    <insert id="insertMbtiRoomMember" parameterType="MbtiRoomMember" useGeneratedKeys="true" keyProperty="memberId">
+        insert into mbti_room_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">room_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isReady != null">is_ready,</if>
+            <if test="isCreator != null">is_creator,</if>
+            <if test="joinTime != null">join_time,</if>
+            <if test="readyTime != null">ready_time,</if>
+            <if test="testRecordId != null">test_record_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">#{roomId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isReady != null">#{isReady},</if>
+            <if test="isCreator != null">#{isCreator},</if>
+            <if test="joinTime != null">#{joinTime},</if>
+            <if test="readyTime != null">#{readyTime},</if>
+            <if test="testRecordId != null">#{testRecordId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiRoomMember" parameterType="MbtiRoomMember">
+        update mbti_room_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isReady != null">is_ready = #{isReady},</if>
+            <if test="isCreator != null">is_creator = #{isCreator},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+            <if test="readyTime != null">ready_time = #{readyTime},</if>
+            <if test="testRecordId != null">test_record_id = #{testRecordId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where member_id = #{memberId}
+    </update>
+
+    <delete id="deleteMbtiRoomMemberByMemberId" parameterType="Long">
+        delete from mbti_room_member where member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteMbtiRoomMemberByMemberIds" parameterType="String">
+        delete from mbti_room_member where member_id in
+        <foreach item="memberId" collection="array" open="(" separator="," close=")">
+            #{memberId}
+        </foreach>
+    </delete>
+</mapper>

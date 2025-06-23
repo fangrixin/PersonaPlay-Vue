@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personaplay.mbti.mapper.MbtiQuestionMapper">
+
+    <resultMap type="MbtiQuestion" id="MbtiQuestionResult">
+        <result property="questionId"    column="question_id"    />
+        <result property="questionText"    column="question_text"    />
+        <result property="dimension"    column="dimension"    />
+        <result property="optionA"    column="option_a"    />
+        <result property="optionB"    column="option_b"    />
+        <result property="optionAValue"    column="option_a_value"    />
+        <result property="optionBValue"    column="option_b_value"    />
+        <result property="weight"    column="weight"    />
+        <result property="versionCodes"    column="version_codes"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMbtiQuestionVo">
+        select question_id, question_text, dimension, option_a, option_b, option_a_value, option_b_value, weight, version_codes, sequence, status, create_by, create_time, update_by, update_time, remark from mbti_question
+    </sql>
+
+    <select id="selectMbtiQuestionList" parameterType="MbtiQuestion" resultMap="MbtiQuestionResult">
+        <include refid="selectMbtiQuestionVo"/>
+        <where>
+            <if test="questionText != null  and questionText != ''"> and question_text = #{questionText}</if>
+            <if test="dimension != null  and dimension != ''"> and dimension = #{dimension}</if>
+            <if test="optionA != null  and optionA != ''"> and option_a = #{optionA}</if>
+            <if test="optionB != null  and optionB != ''"> and option_b = #{optionB}</if>
+            <if test="optionAValue != null  and optionAValue != ''"> and option_a_value = #{optionAValue}</if>
+            <if test="optionBValue != null  and optionBValue != ''"> and option_b_value = #{optionBValue}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="versionCodes != null  and versionCodes != ''"> and version_codes = #{versionCodes}</if>
+            <if test="sequence != null "> and sequence = #{sequence}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectRandomQuestionsByDimension" resultMap="MbtiQuestionResult">
+        <include refid="selectMbtiQuestionVo"/>
+        where dimension = #{dimension} and status ='0' order by rand() limit #{limit}
+    </select>
+
+    <select id="selectMbtiQuestionByQuestionId" parameterType="Long" resultMap="MbtiQuestionResult">
+        <include refid="selectMbtiQuestionVo"/>
+        where question_id = #{questionId}
+    </select>
+
+    <insert id="insertMbtiQuestion" parameterType="MbtiQuestion" useGeneratedKeys="true" keyProperty="questionId">
+        insert into mbti_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionText != null and questionText != ''">question_text,</if>
+            <if test="dimension != null and dimension != ''">dimension,</if>
+            <if test="optionA != null and optionA != ''">option_a,</if>
+            <if test="optionB != null and optionB != ''">option_b,</if>
+            <if test="optionAValue != null and optionAValue != ''">option_a_value,</if>
+            <if test="optionBValue != null and optionBValue != ''">option_b_value,</if>
+            <if test="weight != null">weight,</if>
+            <if test="versionCodes != null">version_codes,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionText != null and questionText != ''">#{questionText},</if>
+            <if test="dimension != null and dimension != ''">#{dimension},</if>
+            <if test="optionA != null and optionA != ''">#{optionA},</if>
+            <if test="optionB != null and optionB != ''">#{optionB},</if>
+            <if test="optionAValue != null and optionAValue != ''">#{optionAValue},</if>
+            <if test="optionBValue != null and optionBValue != ''">#{optionBValue},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="versionCodes != null">#{versionCodes},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMbtiQuestion" parameterType="MbtiQuestion">
+        update mbti_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="questionText != null and questionText != ''">question_text = #{questionText},</if>
+            <if test="dimension != null and dimension != ''">dimension = #{dimension},</if>
+            <if test="optionA != null and optionA != ''">option_a = #{optionA},</if>
+            <if test="optionB != null and optionB != ''">option_b = #{optionB},</if>
+            <if test="optionAValue != null and optionAValue != ''">option_a_value = #{optionAValue},</if>
+            <if test="optionBValue != null and optionBValue != ''">option_b_value = #{optionBValue},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="versionCodes != null">version_codes = #{versionCodes},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where question_id = #{questionId}
+    </update>
+
+    <delete id="deleteMbtiQuestionByQuestionId" parameterType="Long">
+        delete from mbti_question where question_id = #{questionId}
+    </delete>
+
+    <delete id="deleteMbtiQuestionByQuestionIds" parameterType="String">
+        delete from mbti_question where question_id in
+        <foreach item="questionId" collection="array" open="(" separator="," close=")">
+            #{questionId}
+        </foreach>
+    </delete>
+</mapper>
