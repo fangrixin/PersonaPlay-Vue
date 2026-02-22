@@ -391,6 +391,28 @@ public class MbtiTestRecordServiceImpl implements IMbtiTestRecordService
                 );
             }
 
+            // 计算并返回默契度（基于共同答案占比）
+            try {
+                String answersJson1 = member1Info.get("answers");
+                String answersJson2 = member2Info.get("answers");
+                if (answersJson1 != null && answersJson2 != null) {
+                    Map<String, String> answers1 = JSON.parseObject(answersJson1, Map.class);
+                    Map<String, String> answers2 = JSON.parseObject(answersJson2, Map.class);
+                    int total = answers1 != null ? answers1.size() : 0;
+                    if (total > 0 && answers2 != null) {
+                        int sameAnswerCount = (int) answers1.entrySet().stream()
+                            .filter(e -> e.getValue() != null && e.getValue().equals(answers2.get(e.getKey())))
+                            .count();
+                        int chemistry = (sameAnswerCount * 100) / total;
+                        compatibilityInfo.put("chemistryScore", chemistry);
+                        compatibilityInfo.put("identicalAnswers", sameAnswerCount);
+                        compatibilityInfo.put("totalQuestions", total);
+                    }
+                }
+            } catch (Exception ignore) {
+                // ignore chemistry calculation errors to avoid breaking main flow
+            }
+
             // 添加到结果中
             result.put("player1", user1Info);
             result.put("player2", user2Info);
